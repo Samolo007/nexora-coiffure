@@ -49,11 +49,11 @@
       <div class="cuts wrap">
         <div class="cut-grid">
           <article class="cut-card" data-service="Dégradé" role="link" tabindex="0" aria-label="Voir les détails de Dégradé">
-            <div class="cut-art fade" role="img" aria-label="Emplacement photo dégradé"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-art fade has-image"><img class="cut-thumbnail" src="images/degrade-face.png" alt="Dégradé, vue de face"></div>
             <div class="cut-info"><div class="cut-title"><h3>Dégradé</h3><span class="price">25 €</span></div><p class="cut-meta">Dégradé bas, moyen ou haut</p><span class="choose-cut">Voir les détails ↗</span></div>
           </article>
           <article class="cut-card" data-service="Taper" role="link" tabindex="0" aria-label="Voir les détails de Taper">
-            <div class="cut-art taper has-image"><img class="cut-thumbnail" src="images/taper-face.png" alt="Coupe taper, vue de face"></div>
+            <div class="cut-art taper" role="img" aria-label="Emplacement photo taper"><span class="image-note">PHOTO À AJOUTER</span></div>
             <div class="cut-info"><div class="cut-title"><h3>Taper</h3><span class="price">27 €</span></div><p class="cut-meta">Finition précise aux contours</p><span class="choose-cut">Voir les détails ↗</span></div>
           </article>
           <article class="cut-card" data-service="Coupe classique" role="link" tabindex="0" aria-label="Voir les détails de la coupe classique">
@@ -61,7 +61,7 @@
             <div class="cut-info"><div class="cut-title"><h3>Coupe classique</h3><span class="price">23 €</span></div><p class="cut-meta">Coupe aux ciseaux ou tondeuse</p><span class="choose-cut">Voir les détails ↗</span></div>
           </article>
           <article class="cut-card" data-service="Buzz cut" role="link" tabindex="0" aria-label="Voir les détails du buzz cut">
-            <div class="cut-art buzz" role="img" aria-label="Emplacement photo buzz cut"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-art buzz has-image"><img class="cut-thumbnail" src="images/buzz-face.png" alt="Buzz cut, vue de face"></div>
             <div class="cut-info"><div class="cut-title"><h3>Buzz cut</h3><span class="price">18 €</span></div><p class="cut-meta">Coupe courte à la tondeuse</p><span class="choose-cut">Voir les détails ↗</span></div>
           </article>
           <article class="cut-card" data-service="French crop" role="link" tabindex="0" aria-label="Voir les détails du French crop">
@@ -83,21 +83,27 @@
           <div class="gallery">
             <div class="gallery-stage" id="galleryStage" tabindex="0" aria-label="Galerie photos. Utilisez les flèches gauche et droite pour changer de vue.">
               <div class="detail-photo" id="detailPhoto" role="img" aria-label="Vue de face — photo à ajouter"></div>
+              <span class="photo-placeholder" id="photoPlaceholder" hidden>Photo à ajouter</span>
               <span class="angle-label" id="angleLabel">VUE DE FACE</span>
               <button class="gallery-control previous" id="previousPhoto" type="button" aria-label="Photo précédente">←</button>
               <button class="gallery-control next" id="nextPhoto" type="button" aria-label="Photo suivante">→</button>
             </div>
             <div class="gallery-thumbnails" role="group" aria-label="Choisir un angle de vue">
-              <button class="gallery-thumbnail active" type="button" data-photo="0" aria-pressed="true"><img src="images/taper-face.png" alt="" hidden><span>Face</span></button>
-              <button class="gallery-thumbnail" type="button" data-photo="1" aria-pressed="false"><img src="images/taper-dos.png" alt="" hidden><span>Dos</span></button>
-              <button class="gallery-thumbnail" type="button" data-photo="2" aria-pressed="false"><img src="images/taper-profil-gauche.png" alt="" hidden><span>Profil gauche</span></button>
-              <button class="gallery-thumbnail" type="button" data-photo="3" aria-pressed="false"><img src="images/taper-profil-droit.png" alt="" hidden><span>Profil droit</span></button>
+              <button class="gallery-thumbnail active" type="button" data-photo="0" aria-pressed="true"><img alt="" hidden><span>Face</span></button>
+              <button class="gallery-thumbnail" type="button" data-photo="1" aria-pressed="false"><img alt="" hidden><span>Dos</span></button>
+              <button class="gallery-thumbnail" type="button" data-photo="2" aria-pressed="false"><img alt="" hidden><span>Profil gauche</span></button>
+              <button class="gallery-thumbnail" type="button" data-photo="3" aria-pressed="false"><img alt="" hidden><span>Profil droit</span></button>
             </div>
           </div>
           <div class="detail-info">
             <div class="eyebrow">Coupe homme · Détails</div>
             <h1 id="detailTitle">Dégradé</h1>
             <p class="detail-summary" id="detailSummary"></p>
+            <div class="cut-variants" id="cutVariants" hidden>
+              <span class="variant-label" id="variantLabel">Choisir une déclinaison</span>
+              <div class="variant-options" id="variantOptions" role="group" aria-labelledby="variantLabel"></div>
+              <p class="variant-description" id="variantDescription"></p>
+            </div>
             <div class="detail-price-row"><span class="detail-price" id="detailPrice"></span></div>
             <button class="button" id="bookThisCut" type="button">Réserver cette coupe ↗</button>
             <div class="detail-facts">
@@ -125,6 +131,7 @@
           <div class="field"><label for="name">Votre nom</label><input id="name" name="name" autocomplete="name" placeholder="Alexandre Martin" required></div>
           <div class="field"><label for="phone">Votre téléphone</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" required></div>
           <div class="field"><label for="service">La coupe</label><select id="service" name="service" required><option value="">Choisir une coupe</option><option>Dégradé</option><option>Taper</option><option>Coupe classique</option><option>Buzz cut</option><option>French crop</option><option>Coupe aux ciseaux</option></select></div>
+          <div class="field full" id="variantBookingField" hidden><label for="variant">Déclinaison choisie</label><input id="variant" name="variant" readonly></div>
           <div class="field"><label for="extra">Une option en plus ?</label><select id="extra" name="extra"><option value="none">Aucune option</option><option value="beard">Taille de barbe · +12 €</option><option value="shave">Rasage traditionnel · +18 €</option></select></div>
           <div class="field"><label for="date">La date</label><input id="date" name="date" type="date" required></div>
           <div class="field full"><label for="time">Heure du rendez-vous</label><select id="time" name="time" required><option value="">Choisissez d’abord une coupe et une date</option></select><span id="availabilityMessage" class="field-hint" role="status" aria-live="polite">Horaires démo : mardi–samedi, 9 h–12 h et 13 h–19 h. Fermé dimanche et lundi.</span></div>

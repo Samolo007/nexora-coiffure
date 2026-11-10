@@ -1,6 +1,20 @@
 const cuts = {
       degrade: {
         name: "Dégradé", price: "25 €", priceAmount: 25,
+        variants: [
+          {
+            name: "Dégradé bas",
+            description: "Le fondu commence près des oreilles et de la nuque pour un résultat discret.",
+            images: [
+              "images/degrade-face.png",
+              "images/degrade-dos.png",
+              "images/degrade-profil-gauche.png",
+              "images/degrade-profil-droit.png"
+            ]
+          },
+          { name: "Dégradé moyen", description: "Le fondu remonte à mi-hauteur pour un contraste équilibré." },
+          { name: "Dégradé haut", description: "Le fondu démarre plus haut sur les côtés pour un contraste marqué." }
+        ],
         summary: "Un fondu progressif sur les côtés, associé à la longueur et au coiffage de votre choix.",
         ideal: "Un style net et facile à personnaliser.",
         maintenance: "Toutes les 2 à 3 semaines.",
@@ -8,11 +22,10 @@ const cuts = {
       },
       taper: {
         name: "Taper", price: "27 €", priceAmount: 27,
-        images: [
-          "images/taper-face.png",
-          "images/taper-dos.png",
-          "images/taper-profil-gauche.png",
-          "images/taper-profil-droit.png"
+        variants: [
+          { name: "Taper bas", description: "Un fondu très bas aux tempes et à la nuque, pour une finition discrète." },
+          { name: "Taper haut", description: "Un fondu plus visible autour des tempes et de la nuque." },
+          { name: "Burst taper", description: "Un fondu arrondi autour des oreilles, avec davantage de longueur conservée derrière." }
         ],
         summary: "Un dégradé discret autour des tempes et de la nuque, avec davantage de longueur conservée.",
         ideal: "Un rendu soigné, naturel et polyvalent.",
@@ -28,6 +41,12 @@ const cuts = {
       },
       buzz: {
         name: "Buzz cut", price: "18 €", priceAmount: 18,
+        images: [
+          "images/buzz-face.png",
+          "images/buzz-dos.png",
+          "images/buzz-profil-gauche.png",
+          "images/buzz-profil-droit.png"
+        ],
         summary: "Une coupe courte et uniforme à la tondeuse, avec contours propres.",
         ideal: "Un style court, pratique et facile d’entretien.",
         maintenance: "Toutes les 2 à 4 semaines.",
@@ -59,7 +78,15 @@ const cuts = {
     const detailSection = document.querySelector("#cutDetail");
     const galleryStage = document.querySelector("#galleryStage");
     const detailPhoto = document.querySelector("#detailPhoto");
+    const photoPlaceholder = document.querySelector("#photoPlaceholder");
+    const cutVariants = document.querySelector("#cutVariants");
+    const variantOptions = document.querySelector("#variantOptions");
+    const variantDescription = document.querySelector("#variantDescription");
+    const variantBookingField = document.querySelector("#variantBookingField");
+    const variantInput = document.querySelector("#variant");
     let activeCut = "";
+    let activeVariantIndex = 0;
+    let selectedVariantService = "";
     let activePhoto = 0;
 
     const serviceSelect = document.querySelector("#service");
@@ -91,8 +118,12 @@ const cuts = {
       activePhoto = (index + angles.length) % angles.length;
       const angle = angles[activePhoto];
       const cut = cuts[activeCut];
-      const imagePath = cut.images?.[activePhoto];
+      const images = cut.variants?.[activeVariantIndex]?.images ?? cut.images;
+      const imagePath = images?.[activePhoto];
       detailPhoto.classList.toggle("has-photo", Boolean(imagePath));
+      detailPhoto.classList.toggle("no-photo", !imagePath);
+      galleryStage.classList.toggle("no-photo", !imagePath);
+      photoPlaceholder.hidden = Boolean(imagePath);
       detailPhoto.style.backgroundImage = imagePath ? `url("${imagePath}")` : "";
       detailPhoto.dataset.angle = angle;
       detailPhoto.setAttribute(
@@ -103,10 +134,35 @@ const cuts = {
       document.querySelectorAll(".gallery-thumbnail").forEach((button, buttonIndex) => {
         const isActive = buttonIndex === activePhoto;
         const thumbnail = button.querySelector("img");
-        thumbnail.hidden = !cut.images;
+        const thumbnailPath = images?.[buttonIndex];
+        if (thumbnailPath) {
+          thumbnail.src = thumbnailPath;
+        } else {
+          thumbnail.removeAttribute("src");
+        }
+        thumbnail.hidden = !images;
+        button.classList.toggle("no-photo", !images);
         button.classList.toggle("active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
       });
+    }
+
+    function renderVariant(index) {
+      const cut = cuts[activeCut];
+      if (!cut.variants) return;
+      activeVariantIndex = index;
+      const variant = cut.variants[index];
+      variantOptions.querySelectorAll("button").forEach((button, buttonIndex) => {
+        const isActive = buttonIndex === index;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+      variantDescription.textContent = variant.description;
+      document.querySelector("#detailDescription").textContent = `${cut.description} ${variant.description}`;
+      variantInput.value = variant.name;
+      selectedVariantService = cut.name;
+      variantBookingField.hidden = serviceSelect.value !== cut.name;
+      renderGallery(0);
     }
 
     function renderRoute() {
@@ -126,7 +182,24 @@ const cuts = {
         document.querySelector("#detailPrice").textContent = cut.price;
         document.querySelector("#detailIdeal").textContent = cut.ideal;
         document.querySelector("#detailMaintenance").textContent = cut.maintenance;
-        document.querySelector("#detailDescription").textContent = cut.description;
+        cutVariants.hidden = !cut.variants;
+        variantOptions.replaceChildren();
+        if (cut.variants) {
+          cut.variants.forEach((variant, index) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "variant-option";
+            button.textContent = variant.name;
+            button.setAttribute("aria-pressed", "false");
+            button.addEventListener("click", () => renderVariant(index));
+            variantOptions.append(button);
+          });
+          renderVariant(0);
+        } else {
+          variantInput.value = "";
+          variantBookingField.hidden = true;
+          document.querySelector("#detailDescription").textContent = cut.description;
+        }
         renderGallery(0);
       }
 
@@ -163,6 +236,9 @@ const cuts = {
     document.querySelector("#nextPhoto").addEventListener("click", () => renderGallery(activePhoto + 1));
     document.querySelector("#bookThisCut").addEventListener("click", () => {
       serviceSelect.value = cuts[activeCut].name;
+      variantInput.value = cuts[activeCut].variants?.[activeVariantIndex]?.name ?? "";
+      selectedVariantService = variantInput.value ? cuts[activeCut].name : "";
+      variantBookingField.hidden = !variantInput.value;
       updateAvailableSlots();
       window.location.hash = "reservation";
     });
@@ -255,6 +331,13 @@ const cuts = {
     [serviceSelect, extraSelect, dateInput].forEach((control) => {
       control.addEventListener("change", updateAvailableSlots);
     });
+    serviceSelect.addEventListener("change", () => {
+      if (serviceSelect.value !== selectedVariantService) {
+        variantInput.value = "";
+        selectedVariantService = "";
+      }
+      variantBookingField.hidden = !variantInput.value;
+    });
     [
       document.querySelector("#name"),
       document.querySelector("#phone"),
@@ -283,6 +366,7 @@ const cuts = {
         ["Nom", formData.get("name")],
         ["Téléphone", formData.get("phone")],
         ["Prestation", service.name],
+        ...(formData.get("variant") ? [["Déclinaison", formData.get("variant")]] : []),
         ["Option", extra.name],
         ["Date", date],
         ["Heure", formatTime(Number(formData.get("time")))],
