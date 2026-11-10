@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#191a18">
+  <meta name="description" content="Le Fauteuil, barber shop. Choisissez votre coupe homme et demandez un rendez-vous.">
+  <title>Le Fauteuil — Barber shop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="nav wrap" aria-label="Navigation principale">
+      <a class="brand" href="#accueil" aria-label="Le Fauteuil, accueil">
+        <span class="brand-mark">F</span>
+        <span class="brand-name">Le Fauteuil<small>Barber shop</small></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#coupes">Nos coupes</a>
+        <a href="#reservation">Rendez-vous</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a class="button" href="#reservation">Réserver <span aria-hidden="true">↗</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="accueil">
+      <div class="hero-grid wrap">
+        <div class="hero-copy">
+          <div class="eyebrow">Barber shop · Coupes homme</div>
+          <h1>Une coupe<br><span>bien taillée.</span></h1>
+          <p>Dégradé, taper ou coupe classique : choisissez votre style et prenez rendez-vous chez Le Fauteuil.</p>
+          <a class="button" href="#coupes">Voir les coupes <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-art" role="img" aria-label="Emplacement pour une photo de coupe homme">
+          <span class="image-note">VOTRE PHOTO ICI</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="coupes">
+      <div class="intro wrap">
+        <div class="eyebrow">Tarifs indicatifs · À confirmer</div>
+        <h2>Choisissez votre coupe.</h2>
+        <p>Des coupes homme simples, nettes et adaptées à votre style. Sélectionnez une prestation pour préparer votre rendez-vous.</p>
+      </div>
+      <div class="cuts wrap">
+        <div class="cut-grid">
+          <article class="cut-card" data-service="Dégradé" role="link" tabindex="0" aria-label="Voir les détails de Dégradé">
+            <div class="cut-art fade" role="img" aria-label="Emplacement photo dégradé"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-info"><div class="cut-title"><h3>Dégradé</h3><span class="price">25 €</span></div><p class="cut-meta">Dégradé bas, moyen ou haut</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+          <article class="cut-card" data-service="Taper" role="link" tabindex="0" aria-label="Voir les détails de Taper">
+            <div class="cut-art taper has-image"><img class="cut-thumbnail" src="images/taper-face.png" alt="Coupe taper, vue de face"></div>
+            <div class="cut-info"><div class="cut-title"><h3>Taper</h3><span class="price">27 €</span></div><p class="cut-meta">Finition précise aux contours</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+          <article class="cut-card" data-service="Coupe classique" role="link" tabindex="0" aria-label="Voir les détails de la coupe classique">
+            <div class="cut-art classic" role="img" aria-label="Emplacement photo coupe classique"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-info"><div class="cut-title"><h3>Coupe classique</h3><span class="price">23 €</span></div><p class="cut-meta">Coupe aux ciseaux ou tondeuse</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+          <article class="cut-card" data-service="Buzz cut" role="link" tabindex="0" aria-label="Voir les détails du buzz cut">
+            <div class="cut-art buzz" role="img" aria-label="Emplacement photo buzz cut"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-info"><div class="cut-title"><h3>Buzz cut</h3><span class="price">18 €</span></div><p class="cut-meta">Coupe courte à la tondeuse</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+          <article class="cut-card" data-service="French crop" role="link" tabindex="0" aria-label="Voir les détails du French crop">
+            <div class="cut-art crop" role="img" aria-label="Emplacement photo french crop"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-info"><div class="cut-title"><h3>French crop</h3><span class="price">25 €</span></div><p class="cut-meta">Coupe texturée et moderne</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+          <article class="cut-card" data-service="Coupe aux ciseaux" role="link" tabindex="0" aria-label="Voir les détails de la coupe aux ciseaux">
+            <div class="cut-art long" role="img" aria-label="Emplacement photo coupe aux ciseaux"><span class="image-note">PHOTO À AJOUTER</span></div>
+            <div class="cut-info"><div class="cut-title"><h3>Coupe aux ciseaux</h3><span class="price">28 €</span></div><p class="cut-meta">Travail aux ciseaux et coiffage</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cut-detail" id="cutDetail" hidden>
+      <div class="wrap">
+        <a class="detail-back" href="#coupes">← Retour aux coupes</a>
+        <div class="detail-grid">
+          <div class="gallery">
+            <div class="gallery-stage" id="galleryStage" tabindex="0" aria-label="Galerie photos. Utilisez les flèches gauche et droite pour changer de vue.">
+              <div class="detail-photo" id="detailPhoto" role="img" aria-label="Vue de face — photo à ajouter"></div>
+              <span class="angle-label" id="angleLabel">VUE DE FACE</span>
+              <button class="gallery-control previous" id="previousPhoto" type="button" aria-label="Photo précédente">←</button>
+              <button class="gallery-control next" id="nextPhoto" type="button" aria-label="Photo suivante">→</button>
+            </div>
+            <div class="gallery-thumbnails" role="group" aria-label="Choisir un angle de vue">
+              <button class="gallery-thumbnail active" type="button" data-photo="0" aria-pressed="true"><img src="images/taper-face.png" alt="" hidden><span>Face</span></button>
+              <button class="gallery-thumbnail" type="button" data-photo="1" aria-pressed="false"><img src="images/taper-dos.png" alt="" hidden><span>Dos</span></button>
+              <button class="gallery-thumbnail" type="button" data-photo="2" aria-pressed="false"><img src="images/taper-profil-gauche.png" alt="" hidden><span>Profil gauche</span></button>
+              <button class="gallery-thumbnail" type="button" data-photo="3" aria-pressed="false"><img src="images/taper-profil-droit.png" alt="" hidden><span>Profil droit</span></button>
+            </div>
+          </div>
+          <div class="detail-info">
+            <div class="eyebrow">Coupe homme · Détails</div>
+            <h1 id="detailTitle">Dégradé</h1>
+            <p class="detail-summary" id="detailSummary"></p>
+            <div class="detail-price-row"><span class="detail-price" id="detailPrice"></span></div>
+            <button class="button" id="bookThisCut" type="button">Réserver cette coupe ↗</button>
+            <div class="detail-facts">
+              <div class="detail-fact"><strong>Idéal pour</strong><span id="detailIdeal"></span></div>
+              <div class="detail-fact"><strong>Entretien conseillé</strong><span id="detailMaintenance"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-description">
+          <h2>À propos de cette coupe</h2>
+          <p id="detailDescription"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking" id="reservation">
+      <div class="booking-grid wrap">
+        <div class="booking-copy">
+          <div class="eyebrow">Réservation</div>
+          <h2>On vous garde un fauteuil ?</h2>
+          <p>Choisissez votre coupe, la date et l’heure qui vous conviennent. Ajoutez une option barbe si vous le souhaitez. Votre demande sera récapitulée avant confirmation.</p>
+          <div class="contact-note" id="contact">Adresse à définir<br>Téléphone à définir<br><strong>Horaires démo :</strong> mardi–samedi, 9 h–12 h et 13 h–19 h<br>Fermé dimanche et lundi</div>
+        </div>
+        <form class="booking-form" id="bookingForm">
+          <div class="field"><label for="name">Votre nom</label><input id="name" name="name" autocomplete="name" placeholder="Alexandre Martin" required></div>
+          <div class="field"><label for="phone">Votre téléphone</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" required></div>
+          <div class="field"><label for="service">La coupe</label><select id="service" name="service" required><option value="">Choisir une coupe</option><option>Dégradé</option><option>Taper</option><option>Coupe classique</option><option>Buzz cut</option><option>French crop</option><option>Coupe aux ciseaux</option></select></div>
+          <div class="field"><label for="extra">Une option en plus ?</label><select id="extra" name="extra"><option value="none">Aucune option</option><option value="beard">Taille de barbe · +12 €</option><option value="shave">Rasage traditionnel · +18 €</option></select></div>
+          <div class="field"><label for="date">La date</label><input id="date" name="date" type="date" required></div>
+          <div class="field full"><label for="time">Heure du rendez-vous</label><select id="time" name="time" required><option value="">Choisissez d’abord une coupe et une date</option></select><span id="availabilityMessage" class="field-hint" role="status" aria-live="polite">Horaires démo : mardi–samedi, 9 h–12 h et 13 h–19 h. Fermé dimanche et lundi.</span></div>
+          <div class="field full"><label for="note">Une précision pour le salon <span class="optional">(facultatif)</span></label><textarea id="note" name="note" maxlength="300" rows="3" placeholder="Une préférence de coupe, une demande particulière…"></textarea></div>
+          <p class="price-estimate field full" id="priceEstimate">Choisissez une coupe pour voir le prix estimé.</p>
+          <p class="demo-note field full">Prototype : horaires et créneaux de démonstration. Aucune réservation n’est transmise ni bloquée ; horaires et tarifs à confirmer.</p>
+          <div class="form-message" id="formMessage" role="status" aria-live="polite"><strong class="summary-heading">Récapitulatif de votre demande</strong><ul class="summary-list" id="confirmationDetails"></ul><p class="summary-disclaimer">Ceci est une simulation : le salon n’a pas reçu la demande et le créneau n’est pas réservé.</p></div>
+          <button class="button field full" type="submit">Afficher le récapitulatif ↗</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-row wrap">
+      <a class="brand" href="#accueil"><span class="brand-mark">F</span><span class="brand-name">Le Fauteuil<small>Barber shop</small></span></a>
+      <div class="footer-info">Adresse, horaires et coordonnées à personnaliser<br>Prototype de réservation · 2026</div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
