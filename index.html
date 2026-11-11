@@ -17,6 +17,7 @@
       </a>
       <div class="nav-links" id="navLinks">
         <a href="#coupes">Nos coupes</a>
+        <a href="#avis">Avis</a>
         <a href="#reservation">Rendez-vous</a>
         <a href="#contact">Contact</a>
       </div>
@@ -34,8 +35,9 @@
           <p>Dégradé, taper ou coupe classique : choisissez votre style et prenez rendez-vous chez Le Fauteuil.</p>
           <a class="button" href="#coupes">Voir les coupes <span aria-hidden="true">↓</span></a>
         </div>
-        <div class="hero-art" role="img" aria-label="Emplacement pour une photo de coupe homme">
-          <span class="image-note">VOTRE PHOTO ICI</span>
+        <div class="hero-art">
+          <img src="images/salon-ambiance.png" alt="Ambiance chaleureuse du salon de coiffure, avec ses fauteuils et ses postes de barbier" fetchpriority="high">
+          <span class="hero-image-caption"><span class="caption-dot"></span> L’ART DU BARBIER · DEPUIS TOUJOURS</span>
         </div>
       </div>
     </section>
@@ -71,6 +73,36 @@
           <article class="cut-card" data-service="Coupe aux ciseaux" role="link" tabindex="0" aria-label="Voir les détails de la coupe aux ciseaux">
             <div class="cut-art long" role="img" aria-label="Emplacement photo coupe aux ciseaux"><span class="image-note">PHOTO À AJOUTER</span></div>
             <div class="cut-info"><div class="cut-title"><h3>Coupe aux ciseaux</h3><span class="price">28 €</span></div><p class="cut-meta">Travail aux ciseaux et coiffage</p><span class="choose-cut">Voir les détails ↗</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="reviews" id="avis">
+      <div class="wrap">
+        <div class="reviews-heading">
+          <div>
+            <div class="eyebrow">L’expérience Le Fauteuil</div>
+            <h2>Un bon moment.<br><span>Une coupe impeccable.</span></h2>
+          </div>
+          <p>Un accueil aux petits soins, des finitions nettes et un style qui vous ressemble.</p>
+        </div>
+        <p class="reviews-demo-note">Exemples fictifs pour le prototype — à remplacer par de vrais avis avant publication.</p>
+        <div class="review-grid">
+          <article class="review-card">
+            <div class="review-stars" aria-label="5 étoiles de démonstration">★★★★★</div>
+            <blockquote>« Exactement le dégradé que je voulais. Travail précis et ambiance au top. »</blockquote>
+            <p class="review-author">Client du salon <span>Avis de démonstration</span></p>
+          </article>
+          <article class="review-card">
+            <div class="review-stars" aria-label="5 étoiles de démonstration">★★★★★</div>
+            <blockquote>« Très bon accueil, à l’écoute et de bons conseils pour choisir ma coupe. »</blockquote>
+            <p class="review-author">Client du salon <span>Avis de démonstration</span></p>
+          </article>
+          <article class="review-card">
+            <div class="review-stars" aria-label="5 étoiles de démonstration">★★★★★</div>
+            <blockquote>« Réservation simple, finition soignée : je reviendrai sans hésiter. »</blockquote>
+            <p class="review-author">Client du salon <span>Avis de démonstration</span></p>
           </article>
         </div>
       </div>
@@ -124,11 +156,26 @@
         <div class="booking-copy">
           <div class="eyebrow">Réservation</div>
           <h2>On vous garde un fauteuil ?</h2>
-          <p>Choisissez votre coupe, la date et l’heure qui vous conviennent. Ajoutez une option barbe si vous le souhaitez. Votre demande sera récapitulée avant confirmation.</p>
-          <div class="contact-note" id="contact">Adresse à définir<br>Téléphone à définir<br><strong>Horaires démo :</strong> mardi–samedi, 9 h–12 h et 13 h–19 h<br>Fermé dimanche et lundi</div>
+          <p>Choisissez votre coupe, la date et l’heure qui vous conviennent. Votre demande sera enregistrée dans le tableau du salon et un e-mail récapitulatif vous sera envoyé.</p>
+          <div class="contact-note" id="contact">
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">⌖</span>
+              <div><strong>Nous trouver</strong><span>Adresse du salon à renseigner</span></div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">↗</span>
+              <div><strong>Nous contacter</strong><span>Téléphone à renseigner</span></div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon" aria-hidden="true">◷</span>
+              <div><strong>Horaires de démonstration</strong><span>Mardi–samedi · 9 h–12 h et 13 h–19 h<br>Fermé dimanche et lundi</span></div>
+            </div>
+            <p class="contact-demo-note">Adresse, téléphone et horaires à confirmer.</p>
+          </div>
         </div>
         <form class="booking-form" id="bookingForm">
           <div class="field"><label for="name">Votre nom</label><input id="name" name="name" autocomplete="name" placeholder="Alexandre Martin" required></div>
+          <div class="field"><label for="email">Votre e-mail</label><input id="email" name="email" type="email" autocomplete="email" placeholder="alexandre@email.com" maxlength="160" required></div>
           <div class="field"><label for="phone">Votre téléphone</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" required></div>
           <div class="field"><label for="service">La coupe</label><select id="service" name="service" required><option value="">Choisir une coupe</option><option>Dégradé</option><option>Taper</option><option>Coupe classique</option><option>Buzz cut</option><option>French crop</option><option>Coupe aux ciseaux</option></select></div>
           <div class="field full" id="variantBookingField" hidden><label for="variant">Déclinaison choisie</label><input id="variant" name="variant" readonly></div>
@@ -137,10 +184,13 @@
           <div class="field full"><label for="time">Heure du rendez-vous</label><select id="time" name="time" required><option value="">Choisissez d’abord une coupe et une date</option></select><span id="availabilityMessage" class="field-hint" role="status" aria-live="polite">Horaires démo : mardi–samedi, 9 h–12 h et 13 h–19 h. Fermé dimanche et lundi.</span></div>
           <div class="field full"><label for="note">Une précision pour le salon <span class="optional">(facultatif)</span></label><textarea id="note" name="note" maxlength="300" rows="3" placeholder="Une préférence de coupe, une demande particulière…"></textarea></div>
           <p class="price-estimate field full" id="priceEstimate">Choisissez une coupe pour voir le prix estimé.</p>
-          <p class="demo-note field full">Prototype : horaires et créneaux de démonstration. Aucune réservation n’est transmise ni bloquée ; horaires et tarifs à confirmer.</p>
-          <div class="form-message" id="formMessage" role="status" aria-live="polite"><strong class="summary-heading">Récapitulatif de votre demande</strong><ul class="summary-list" id="confirmationDetails"></ul><p class="summary-disclaimer">Ceci est une simulation : le salon n’a pas reçu la demande et le créneau n’est pas réservé.</p></div>
-          <button class="button field full" type="submit">Afficher le récapitulatif ↗</button>
+          <label class="consent field full"><input id="consent" name="consent" type="checkbox" required><span>J’accepte que mes coordonnées soient utilisées pour traiter cette demande et envoyer les e-mails de réservation.</span></label>
+          <div class="honeypot" aria-hidden="true"><label for="website">Ne pas remplir</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+          <input id="requestId" name="requestId" type="hidden">
+          <div class="form-message field full" id="formMessage" role="status" aria-live="polite"><strong class="summary-heading">Demande de rendez-vous</strong><p id="resultStatus"></p><ul class="summary-list" id="confirmationDetails"></ul></div>
+          <button class="button field full" id="submitBooking" type="submit">Envoyer ma demande ↗</button>
         </form>
+        <iframe class="booking-response-frame" id="bookingResponseFrame" name="bookingResponseFrame" title="Réponse à la demande de rendez-vous"></iframe>
       </div>
     </section>
   </main>
@@ -152,6 +202,8 @@
     </div>
   </footer>
 
+  <a class="mobile-booking-button" href="#reservation">Prendre rendez-vous <span aria-hidden="true">↗</span></a>
+  <script src="config.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

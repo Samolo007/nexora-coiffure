@@ -74,7 +74,7 @@ const cuts = {
     };
     const openingPeriods = [{ start: 9 * 60, end: 12 * 60 }, { start: 13 * 60, end: 19 * 60 }];
     const angles = ["Face", "Dos", "Profil gauche", "Profil droit"];
-    const detailRouteIds = ["accueil", "coupes", "reservation", "contact"];
+    const detailRouteIds = ["accueil", "coupes", "avis", "reservation", "contact"];
     const detailSection = document.querySelector("#cutDetail");
     const galleryStage = document.querySelector("#galleryStage");
     const detailPhoto = document.querySelector("#detailPhoto");
@@ -98,6 +98,13 @@ const cuts = {
     const availabilityMessage = document.querySelector("#availabilityMessage");
     const priceEstimate = document.querySelector("#priceEstimate");
     const confirmationDetails = document.querySelector("#confirmationDetails");
+    const resultStatus = document.querySelector("#resultStatus");
+    const submitButton = document.querySelector("#submitBooking");
+    const requestIdInput = document.querySelector("#requestId");
+    const responseFrame = document.querySelector("#bookingResponseFrame");
+    const responseTimeoutMs = 30000;
+    let pendingRequestId = "";
+    let responseTimer = 0;
     const today = new Date();
     const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
     dateInput.min = localToday.toISOString().slice(0, 10);
@@ -120,6 +127,9 @@ const cuts = {
       const cut = cuts[activeCut];
       const images = cut.variants?.[activeVariantIndex]?.images ?? cut.images;
       const imagePath = images?.[activePhoto];
+      detailPhoto.classList.remove("gallery-photo-enter");
+      void detailPhoto.offsetWidth;
+      detailPhoto.classList.add("gallery-photo-enter");
       detailPhoto.classList.toggle("has-photo", Boolean(imagePath));
       detailPhoto.classList.toggle("no-photo", !imagePath);
       galleryStage.classList.toggle("no-photo", !imagePath);
@@ -265,9 +275,53 @@ const cuts = {
     window.addEventListener("hashchange", renderRoute);
     renderRoute();
 
+    const revealElements = document.querySelectorAll(
+      ".intro, .cut-card, .reviews-heading, .review-card, .detail-grid, .detail-description, .booking-copy, .booking-form"
+    );
+    revealElements.forEach((element, index) => {
+      element.classList.add("reveal-on-scroll");
+      if (element.classList.contains("cut-card") || element.classList.contains("review-card")) {
+        element.style.setProperty("--reveal-delay", `${(index % 3) * 90}ms`);
+      }
+    });
+
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
+      revealElements.forEach((element) => revealObserver.observe(element));
+    } else {
+      revealElements.forEach((element) => element.classList.add("is-visible"));
+    }
+
+    if ("IntersectionObserver" in window) {
+      const mobileBookingObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          entry.target.dataset.mobileBookingVisible = String(entry.isIntersecting);
+        });
+        const isObstructed = [document.querySelector("#reservation"), document.querySelector("footer")]
+          .some((element) => element.dataset.mobileBookingVisible === "true");
+        document.body.classList.toggle("mobile-booking-hidden", isObstructed);
+      }, { threshold: 0.05 });
+      mobileBookingObserver.observe(document.querySelector("#reservation"));
+      mobileBookingObserver.observe(document.querySelector("footer"));
+    }
+
     function resetConfirmation() {
       formMessage.classList.remove("visible");
+      formMessage.classList.remove("error", "pending");
       confirmationDetails.replaceChildren();
+    }
+
+    function showRequestStatus(message, kind) {
+      formMessage.classList.remove("error", "pending");
+      if (kind) formMessage.classList.add(kind);
+      resultStatus.textContent = message;
+      formMessage.classList.add("visible");
     }
 
     function formatTime(minutes) {
@@ -340,6 +394,7 @@ const cuts = {
     });
     [
       document.querySelector("#name"),
+      document.querySelector("#email"),
       document.querySelector("#phone"),
       document.querySelector("#note")
     ].forEach((control) => {
@@ -347,23 +402,15 @@ const cuts = {
     });
     timeSelect.addEventListener("change", resetConfirmation);
 
-    bookingForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      if (!bookingForm.reportValidity()) return;
-      const formData = new FormData(bookingForm);
+    function buildConfirmation(formData) {
       const service = Object.values(cuts).find((item) => item.name === formData.get("service"));
       const extra = extras[formData.get("extra")];
-      if (!service || !extra || !formData.get("time")) {
-        updateAvailableSlots();
-        availabilityMessage.textContent = "Choisissez une coupe, une date et une heure d’ouverture.";
-        return;
-      }
-
       const date = new Date(`${formData.get("date")}T12:00:00`).toLocaleDateString("fr-FR", {
         weekday: "long", day: "numeric", month: "long"
       });
       const lines = [
         ["Nom", formData.get("name")],
+        ["E-mail", formData.get("email")],
         ["Téléphone", formData.get("phone")],
         ["Prestation", service.name],
         ...(formData.get("variant") ? [["Déclinaison", formData.get("variant")]] : []),
@@ -381,7 +428,66 @@ const cuts = {
         item.append(title, document.createTextNode(value));
         return item;
       }));
-      formMessage.classList.add("visible");
+    }
+
+    bookingForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!bookingForm.reportValidity()) return;
+      const endpoint = window.BOOKING_WEB_APP_URL?.trim();
+      if (!endpoint || !/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(endpoint)) {
+        showRequestStatus("L’envoi en ligne n’est pas encore configuré. La demande n’a pas été envoyée.", "error");
+        return;
+      }
+
+      const formData = new FormData(bookingForm);
+      const service = Object.values(cuts).find((item) => item.name === formData.get("service"));
+      const extra = extras[formData.get("extra")];
+      if (!service || !extra || !formData.get("time")) {
+        updateAvailableSlots();
+        availabilityMessage.textContent = "Choisissez une coupe, une date et une heure d’ouverture.";
+        return;
+      }
+
+      pendingRequestId = globalThis.crypto?.randomUUID?.()
+        ?? `request-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      requestIdInput.value = pendingRequestId;
+      bookingForm.action = endpoint;
+      bookingForm.method = "post";
+      bookingForm.target = responseFrame.name;
+      submitButton.disabled = true;
+      buildConfirmation(formData);
+      showRequestStatus("Envoi de la demande…", "pending");
+      window.clearTimeout(responseTimer);
+      responseTimer = window.setTimeout(() => {
+        if (!pendingRequestId) return;
+        pendingRequestId = "";
+        submitButton.disabled = false;
+        showRequestStatus("La réponse du service tarde. Vérifiez vos e-mails avant de réessayer afin d’éviter une demande en double.", "error");
+      }, responseTimeoutMs);
+      bookingForm.submit();
+    });
+
+    window.addEventListener("message", (event) => {
+      if (event.source !== responseFrame.contentWindow || !pendingRequestId) return;
+      const response = event.data;
+      if (!response || response.requestId !== pendingRequestId) return;
+      window.clearTimeout(responseTimer);
+      pendingRequestId = "";
+      submitButton.disabled = false;
+
+      if (response.status === "success") {
+        showRequestStatus(`Demande enregistrée. Un e-mail récapitulatif est envoyé à ${document.querySelector("#email").value}.`, "");
+      } else if (response.status === "duplicate") {
+        showRequestStatus("Cette demande a déjà été enregistrée. Vérifiez vos e-mails ou contactez le salon si vous ne trouvez pas le récapitulatif.", "");
+      } else if (response.status === "slot_taken") {
+        updateAvailableSlots();
+        availabilityMessage.textContent = "Cette heure vient d’être réservée. Choisissez un autre créneau.";
+        showRequestStatus("Ce créneau n’est plus disponible. Choisissez une autre heure.", "error");
+      } else if (response.status === "email_error") {
+        showRequestStatus("La demande est enregistrée, mais l’envoi des e-mails a échoué. Contactez directement le salon pour vérifier.", "error");
+      } else {
+        showRequestStatus(response.message || "La demande n’a pas pu être enregistrée. Vérifiez les informations et réessayez.", "error");
+      }
     });
 
     const menuToggle = document.querySelector("#menuToggle");
