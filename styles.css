@@ -40,7 +40,7 @@
     }
     @keyframes hero-art-turn {
       0% { transform: perspective(1000px) rotateY(0); animation-timing-function: linear; }
-      100% { transform: perspective(1000px) rotateY(720deg); }
+      100% { transform: perspective(1000px) rotateY(360deg); }
     }
     @keyframes gallery-photo-arrive {
       from { opacity: .55; transform: scale(1.025); }
@@ -48,7 +48,7 @@
     }
     header { animation: header-arrive .65s ease-out both; }
     .hero-copy { animation: hero-copy-arrive .8s .18s cubic-bezier(.22,.68,.2,1) both; }
-    .hero-art { animation: hero-art-turn 3s .1s linear 1 both; transform-origin: center; backface-visibility: hidden; }
+    .hero-art { animation: hero-art-turn 1.7s .1s cubic-bezier(.16,.72,.24,1) 1 both; transform-origin: center; backface-visibility: hidden; }
     .reveal-on-scroll { opacity: 0; transform: translateY(24px); transition: opacity .7s var(--reveal-delay, 0ms) cubic-bezier(.22,.68,.2,1), transform .7s var(--reveal-delay, 0ms) cubic-bezier(.22,.68,.2,1); }
     .reveal-on-scroll.is-visible { opacity: 1; transform: none; }
     .gallery-photo-enter { animation: gallery-photo-arrive .35s ease-out both; }

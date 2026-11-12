@@ -226,14 +226,59 @@ const cuts = {
       }
     }
 
+    const hoverPhotoTimers = new WeakMap();
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
     document.querySelectorAll(".cut-card").forEach((card) => {
       const openDetails = () => {
         window.location.hash = `coupe/${cutSlugs[card.dataset.service]}`;
       };
-      card.addEventListener("click", openDetails);
+      const thumbnail = card.querySelector(".cut-thumbnail");
+      const cut = Object.values(cuts).find((item) => item.name === card.dataset.service);
+      const images = cut?.variants?.[0]?.images ?? cut?.images;
+      let stopPhotoRotation = () => {};
+      if (thumbnail && images?.length > 1) {
+        const preloadedImages = images.map((imagePath) => {
+          const image = new Image();
+          image.src = new URL(imagePath, document.baseURI).href;
+          return image;
+        });
+        const startPhotoRotation = () => {
+          if (reducedMotion.matches || hoverPhotoTimers.has(card)) return;
+          let index = 0;
+          const timer = window.setInterval(() => {
+            const nextIndex = (index + 1) % preloadedImages.length;
+            const nextImage = preloadedImages[nextIndex];
+            if (!nextImage.complete || !nextImage.naturalWidth) return;
+            index = nextIndex;
+            thumbnail.src = nextImage.src;
+            thumbnail.alt = `${cut.name}, vue de ${angles[index].toLowerCase()}`;
+          }, 1000);
+          hoverPhotoTimers.set(card, timer);
+        };
+        stopPhotoRotation = () => {
+          const timer = hoverPhotoTimers.get(card);
+          if (timer === undefined) return;
+          window.clearInterval(timer);
+          hoverPhotoTimers.delete(card);
+          thumbnail.src = images[0];
+          thumbnail.alt = `${cut.name}, vue de face`;
+        };
+        card.addEventListener("pointerenter", startPhotoRotation);
+        card.addEventListener("pointerleave", stopPhotoRotation);
+        card.addEventListener("focusin", startPhotoRotation);
+        card.addEventListener("focusout", (event) => {
+          if (!card.contains(event.relatedTarget)) stopPhotoRotation();
+        });
+      }
+      card.addEventListener("click", () => {
+        stopPhotoRotation();
+        openDetails();
+      });
       card.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
+          stopPhotoRotation();
           openDetails();
         }
       });
